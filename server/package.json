@@ -2,6 +2,7 @@
     "name": "socket-test",
     "version": "0.0.1",
     "description": "my first socket",
+    "type": "module",
     "dependencies": {
         "express": "^4.18.2",
         "socket.io": "^4.7.2"

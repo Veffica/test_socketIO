@@ -1,24 +1,35 @@
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+import express from 'express';
+import { createServer } from 'node:http';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+import { Server } from 'socket.io';
 
-app.use(express.static('../complete/lecture6_15/'));
-app.use(express.static('../libs/'));
-app.use(express.static('../assets/factory'));
-app.use(express.static('../libs/three/jsm/'));
-app.get('/',function(req, res) {
-    res.sendFile(__dirname + '../complete/lecture6_15/index.html');
-});
+const app = express();
+const server = createServer(app);
+const io = new Server(server);
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+app.use(express.static('../public'));
+app.use(express.static('../public/complete/lecture6_15'));
+
+app.get('/', (req, res) => {
+    res.sendFile(join(__dirname, '../public/complete/lecture6_15/index.html'));
+  });
+
 
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('disconnect', () => {
       console.log('user disconnected');
     });
+
+    socket.on("enviar", (response) => {
+        console.log(response +" essa reposta veio do servidor"); // "got it"
+      });
   });
 
-  
-http.listen(3000, function(){
+
+server.listen(3000, function(){
     console.log("Listening on port 3000");
 })
